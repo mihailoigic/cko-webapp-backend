@@ -1,6 +1,6 @@
 ## Description
 
-Backend for frontend app for music start
+Backend for frontend app for music star
 
 ## Installation
 
