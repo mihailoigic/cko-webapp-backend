@@ -5,18 +5,20 @@ export class User {
   @PrimaryGeneratedColumn()
   public id!: number;
 
-  @Column({ type: 'varchar', length: 120 })
-  public name: string;
+  @Column({ type: 'varchar', length: 120, nullable: true })
+  public firstName: string;
+
+  @Column({ type: 'varchar', length: 120, nullable: true })
+  public secondName: string;
 
   @Column({ type: 'varchar', length: 120 })
   public email: string;
 
+  @Column({ type: 'varchar', length: 120 })
+  public password: string;
+
   @Column({ type: 'boolean', default: false })
   public isDeleted: boolean;
-
-  /*
-   * Create and Update Date Columns
-   */
 
   @CreateDateColumn({ type: 'timestamp' })
   public createdAt!: Date;

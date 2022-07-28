@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './user.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -9,16 +9,37 @@ export class UserService {
   @InjectRepository(User)
   private readonly repository: Repository<User>;
 
-  public getUser(id: number): Promise<User> {
-    return this.repository.findOne(id);
+  async getUser(id: any): Promise<any> {
+    const user = await this.repository.findOne({
+      where: {
+        id: id,
+      },
+    });
+    if (user) {
+      return user;
+    } 
+    return {
+      status: 400,
+      message: `User with id: ${id} does not exist!`
+    }
   }
 
-  public createUser(body: CreateUserDto): Promise<User> {
-    const user: User = new User();
-
-    user.name = body.name;
-    user.email = body.email;
-
-    return this.repository.save(user);
+  async updateUser(dto: UpdateUserDto) {
+    const user = await this.repository.findOne({
+      where: {
+        email: dto.email,
+      },
+    });
+    user.firstName = dto.firstName;
+    user.secondName = dto.secondName;
+    user.email = dto.newEmail;
+    try {
+      return this.repository.save(user);
+    } catch (error) {
+      return {
+        status: 400,
+        message: "Invalid change!"
+      }
+    }
   }
 }

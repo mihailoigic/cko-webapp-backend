@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { CreateUserDto } from './user.dto';
+import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { UpdateUserDto } from './dto/updateUser.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -9,12 +10,14 @@ export class UserController {
   private readonly service: UserService;
 
   @Get(':id')
+  @UseGuards(AuthGuard('jwt'))
   public getUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
     return this.service.getUser(id);
   }
 
-  @Post()
-  public createUser(@Body() body: CreateUserDto): Promise<User> {
-    return this.service.createUser(body);
-  }
+  @Post('update')
+  @UseGuards(AuthGuard('jwt'))
+    public updateUser(@Body() dto: UpdateUserDto) {
+      return this.service.updateUser(dto);
+    }
 }
